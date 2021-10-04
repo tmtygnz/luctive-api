@@ -32,6 +32,7 @@ class Integration {
           ],
         },
       });
+    return res;
   }
 }
 
