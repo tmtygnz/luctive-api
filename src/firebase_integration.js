@@ -2,6 +2,7 @@ const admin = require("firebase-admin");
 require("dotenv").config();
 
 const firebaseAuth = JSON.parse(process.env.FIREBASE_AUTH);
+console.log(typeof firebaseAuth);
 
 admin.initializeApp({
   credential: admin.credential.cert(firebaseAuth),

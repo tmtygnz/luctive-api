@@ -33,6 +33,6 @@ io.on("connection", (socket) => {
   socket.on("newSession", (userId) => socket.join(userId));
 });
 
-server.listen(port, () => {
+server.listen(process.env.PORT || 3000, () => {
   console.log(`listening in *:${port}`);
 });
