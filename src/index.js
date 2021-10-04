@@ -8,6 +8,8 @@ const io = new sockio.Server(server, {
     origin: "*",
   },
 });
+
+console.log("Server Starting");
 const firebaseIntegration = require("./firebase_integration");
 const Integration = new firebaseIntegration.Integration();
 
