@@ -1,4 +1,5 @@
 const admin = require("firebase-admin");
+const crypto = require("crypto");
 require("dotenv").config();
 
 const firebaseAuth = JSON.parse(process.env.FIREBASE_AUTH);
@@ -15,14 +16,19 @@ class Integration {
     this.socket = socket;
   }
 
-  createAccount(userId, userName, userEmail) {
-    console.log(`${userId} | ${userName} | ${userEmail}`);
-    const res = db
+  async getHash(x) {
+    console.log(crypto.createHash("md5").update(x).digest("hex"));
+    return await crypto.createHash("md5").update(x).digest("hex");
+  }
+
+  async createAccount(userName, userEmail) {
+    const userHash = await this.getHash(userEmail);
+    const res = await db
       .collection("users")
-      .doc(userEmail)
+      .doc(userHash)
       .set({
-        user_name: userName,
-        user_id: userId,
+        userName: userName,
+        userEmail: userEmail,
         account_date_created: admin.firestore.FieldValue.serverTimestamp(),
         spaces: {
           default: [

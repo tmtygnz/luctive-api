@@ -21,11 +21,9 @@ app.get("/", (req, res) => {
   res.send("<h1>API Documentation is Comming</h1>");
 });
 
-app.get("/users/create", (req, res) => {
+app.get("/users/create", async (req, res) => {
   let { userName, userId, userEmail } = req.body;
-  Integration.createAccount(userId, userName, userEmail)
-    .then((resp) => res.send(resp))
-    .catch((err) => res.send(err));
+  res.send(await Integration.createAccount(userName, userEmail));
 });
 
 io.on("connection", (socket) => {
@@ -34,5 +32,5 @@ io.on("connection", (socket) => {
 });
 
 server.listen(process.env.PORT || 3000, () => {
-  console.log(`listening in *:${port}`);
+  console.log(`listening in *:${process.env.PORT || 3000}`);
 });
