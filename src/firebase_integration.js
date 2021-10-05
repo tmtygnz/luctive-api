@@ -21,12 +21,17 @@ class Integration {
     return await crypto.createHash("md5").update(x).digest("hex");
   }
 
+  async doUserExist(userID) {
+    let userRef = await db.collection("users").doc(userID).get();
+    return userRef.exists;
+  }
+
   async createAccount(userName, userEmail) {
-    const userHash = await this.getHash(userEmail);
-    const res = await db
-      .collection("users")
-      .doc(userHash)
-      .set({
+    const userID = await this.getHash(userEmail);
+    console.log(await this.doUserExist(userID));
+    const res = await db.collection("users").doc(userID);
+    if (!(await this.doUserExist(userID))) {
+      res.set({
         userName: userName,
         userEmail: userEmail,
         account_date_created: admin.firestore.FieldValue.serverTimestamp(),
@@ -38,7 +43,10 @@ class Integration {
           ],
         },
       });
-    return res;
+      return { message: "user created" };
+    } else {
+      return { message: "user already exist" };
+    }
   }
 }
 
