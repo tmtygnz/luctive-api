@@ -26,7 +26,7 @@ class Integration {
     return userRef.exists;
   }
 
-  async createAccount(userName, userEmail) {
+  async createAccountDocument(userName, userEmail) {
     const userID = await this.getHash(userEmail);
     console.log(await this.doUserExist(userID));
     const res = await db.collection("users").doc(userID);

@@ -23,12 +23,26 @@ app.get("/", (req, res) => {
 
 app.get("/users/create", async (req, res) => {
   let { userName, userId, userEmail } = req.body;
-  res.send(await Integration.createAccount(userName, userEmail));
+  res.send(await Integration.createAccountDocument(userName, userEmail));
 });
 
 io.on("connection", (socket) => {
   console.log("user is connected");
-  socket.on("newSession", (userId) => socket.join(userId));
+  socket.on("join_room", (userID) => {
+    console.log(userID);
+    socket.join(userID);
+  });
+
+  socket.on("openAlert", (userID) => {
+    console.log(userID);
+    io.sockets.in(userID).emit("opA", userID);
+  });
+
+  socket.on("leave_room", (userID) => socket.leave(userID));
+  socket.on("disconnecting", () => {
+    console.log("disconnecting");
+    console.log(socket.rooms);
+  });
 });
 
 server.listen(process.env.PORT || 3000, () => {
