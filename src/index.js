@@ -11,7 +11,7 @@ const io = new sockio.Server(server, {
 
 console.log("Server Starting");
 const firebaseIntegration = require("./firebase_integration");
-const Integration = new firebaseIntegration.Integration();
+const Integration = new firebaseIntegration.Integration(io);
 
 const port = 3000;
 
@@ -30,12 +30,8 @@ io.on("connection", (socket) => {
   console.log("user is connected");
   socket.on("join_room", (userID) => {
     console.log(userID);
+    Integration.createListener(userID);
     socket.join(userID);
-  });
-
-  socket.on("openAlert", (userID) => {
-    console.log(userID);
-    io.sockets.in(userID).emit("opA", userID);
   });
 
   socket.on("leave_room", (userID) => socket.leave(userID));
@@ -45,6 +41,6 @@ io.on("connection", (socket) => {
   });
 });
 
-server.listen(process.env.PORT || 3000, () => {
+server.listen(process.env.PORT || 5467, () => {
   console.log(`listening in *:${process.env.PORT || 3000}`);
 });
