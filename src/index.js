@@ -30,22 +30,16 @@ app.get("/", (req, res) => {
   res.send("<h1>API Documentation is Comming</h1>");
 });
 
-app.get("/users/createNew", async (req, res) => {
+app.post("/users/createNew", async (req, res) => {
   let {userID, userName} = req.body;
   res.send(await Integration.createAccountDocument(userID, userName))
 });
 
 app.get("/users/checkUser", async (req, res) => {
-  let {userID} = req.body;
-  console.log(req.body);
-  console.log(`[main] userID: ${userID}`);
-  let user = await Integration.doUserExist(userID);
-  res.send({"doUserExist": user})
-});
-
-app.post("/users/lol", async (req, res)=> {
-  console.log(req.body);
-  res.send(req.body);
+  let userID = req.query.userID;
+  let x = await Integration.doUserExist(userID);
+  console.log(x);
+  res.send({"doExist": x});
 });
 
 io.on("connection", (socket) => {

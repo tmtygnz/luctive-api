@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon ./src/index.js"
+    "dev": "nodemon --trace-warnings ./src/index.js"
   },
   "author": "",
   "license": "ISC",

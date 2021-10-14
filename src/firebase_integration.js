@@ -18,14 +18,13 @@ class Integration {
   }
 
   async doUserExist(userID) {
-    console.log(userID);
     let userRef = await db.collection("users").doc(userID).get();
     return userRef.exists;
   }
 
   async createAccountDocument(userID, userName) {
     const res = await db.collection("users").doc(userID);
-
+    console.log(await this.doUserExist(userID));
     if (!(await this.doUserExist(userID))) {
       res.set({
         userName: userName,
