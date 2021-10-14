@@ -21,9 +21,15 @@ app.get("/", (req, res) => {
   res.send("<h1>API Documentation is Comming</h1>");
 });
 
-app.get("/users/create", async (req, res) => {
-  let { userName, userId, userEmail } = req.body;
-  res.send(await Integration.createAccountDocument(userName, userEmail));
+app.get("/users/createNew", async (req, res) => {
+  let {userID, userName} = req.body;
+  res.send(await Integration.createAccountDocument(userID, userName))
+});
+
+app.get("/users/check", async (req, res) => {
+  let {userID} = req.body;
+  let user = await Integration.doUserExist(userID);
+  res.send({"doUserExist": user})
 });
 
 io.on("connection", (socket) => {
