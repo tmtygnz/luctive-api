@@ -3,6 +3,7 @@ const app = express();
 const http = require("http");
 const server = http.createServer(app);
 const sockio = require("socket.io");
+const cors = require("cors");
 const io = new sockio.Server(server, {
   cors: {
     origin: "*",
@@ -16,6 +17,14 @@ const Integration = new firebaseIntegration.Integration(io);
 const port = 3000;
 
 app.use(express.json());
+app.use(cors());
+
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 
 app.get("/", (req, res) => {
   res.send("<h1>API Documentation is Comming</h1>");
@@ -26,10 +35,17 @@ app.get("/users/createNew", async (req, res) => {
   res.send(await Integration.createAccountDocument(userID, userName))
 });
 
-app.get("/users/check", async (req, res) => {
+app.get("/users/checkUser", async (req, res) => {
   let {userID} = req.body;
+  console.log(req.body);
+  console.log(`[main] userID: ${userID}`);
   let user = await Integration.doUserExist(userID);
   res.send({"doUserExist": user})
+});
+
+app.post("/users/lol", async (req, res)=> {
+  console.log(req.body);
+  res.send(req.body);
 });
 
 io.on("connection", (socket) => {

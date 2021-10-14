@@ -18,6 +18,7 @@ class Integration {
   }
 
   async doUserExist(userID) {
+    console.log(userID);
     let userRef = await db.collection("users").doc(userID).get();
     return userRef.exists;
   }
