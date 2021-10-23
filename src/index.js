@@ -17,29 +17,35 @@ const Integration = new firebaseIntegration.Integration(io);
 const port = 3000;
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
   next();
 });
-
 
 app.get("/", (req, res) => {
   res.send("<h1>API Documentation is Comming</h1>");
 });
 
 app.post("/users/createNew", async (req, res) => {
-  let {userID, userName} = req.body;
-  res.send(await Integration.createAccountDocument(userID, userName))
+  let userID = req.query.userID;
+  let userName = req.query.userName;
+  console.log(req.body);
+  res.send(await Integration.createAccountDocument(userID, userName));
 });
 
 app.get("/users/checkUser", async (req, res) => {
   let userID = req.query.userID;
+  console.log(`userID Check ${userID}`);
   let x = await Integration.doUserExist(userID);
   console.log(x);
-  res.send({"doExist": x});
+  res.send({ doExist: x });
 });
 
 io.on("connection", (socket) => {
